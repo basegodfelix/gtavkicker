@@ -1,0 +1,1 @@
+pyinstaller.exe --onefile --windowed --icon=icon2.ico gtasusp.py
