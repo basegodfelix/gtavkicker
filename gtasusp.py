@@ -3,10 +3,11 @@ from tkinter import messagebox
 import psutil
 from time import sleep
 import wmi
+import threading
+import pythoncom
 
 win = tk.Tk()
 win.title("GTA 5 Private Public Lobby")
-# win.wm_iconbitmap("%s/icon2.ico" % os.path.dirname(__file__))
 win.wm_iconbitmap("icon2.ico")
 
 
@@ -28,23 +29,8 @@ win.configure(background = 'black')
 TL = tk.Label(win, text = 'GTA 5 Private Public Lobby', fg = 'green', bg = 'black', font = (None, 30), height = 2)
 TL.pack(anchor = 'n')
 
-# def GTACommand():
-#     PROCNAME = "GTA5.exe"
-#     try:
-#         for proc in psutil.process_iter():
-#             if proc.name() == PROCNAME:
-#                 p = psutil.Process(int(proc.pid))
-        
-# #^Get Process ID Number For GTA5^
-      
-#                 p.suspend()
-#                 sleep(10)
-#                 p.resume()
-#                 messagebox.showinfo("GTA 5 Private Public Lobby", "You May Now Close The Program You're Now In A Public Lobby With No Other Players, Enjoy!") 
-#     except NameError:
-#         messagebox.showinfo("Ooops!", "You Are Not Running GTA 5!")
-
-def GTACommand():
+def th_freeze():
+    pythoncom.CoInitialize() #pylint: disable=no-member
     PROCNAME = 'GTA5.exe'
     f = wmi.WMI()
     found = False
@@ -62,9 +48,13 @@ def GTACommand():
     if found is False:
         print('You are not running GTA!')
         messagebox.showinfo("Ooops!", "You Are Not Running GTA 5!")
+
+def GTACommand():
+    x = threading.Thread(target=th_freeze)
+    x.start()
     
 def About():
-    messagebox.showinfo("Made By Mirrorable", "Allows You To Have Your Own Public Lobby To Get Away From Greifers/Hackers")
+    messagebox.showinfo("Made By BaseGodFelix", "Allows You To Have Your Own Public Lobby To Get Away From Greifers/Hackers")
     
     
 button1 = tk.Button(win, text="Start", width=25, command=GTACommand)
